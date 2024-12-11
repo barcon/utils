@@ -10,8 +10,7 @@ project "utils"
    
    targetdir "build/%{cfg.buildcfg}"
 
-   files { "src/**.cpp" }
-   includedirs { "src" }
+   files { "src/**.hpp", "src/**.cpp" }
 
    filter "configurations:Debug"
       architecture "x86_64"     
