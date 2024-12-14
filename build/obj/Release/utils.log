@@ -1,6 +1,0 @@
-﻿  utils_file.cpp
-  utils_math.cpp
-  utils_string.cpp
-  utils_timer.cpp
-  Generating Code...
-  utils.vcxproj -> C:\devel\utils\build\Release\utils.lib
