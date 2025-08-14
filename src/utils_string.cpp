@@ -1,4 +1,5 @@
 #include "utils_string.hpp"
+#include <algorithm>
 
 namespace utils
 {
@@ -23,6 +24,85 @@ namespace utils
 
 			return res;
 		}
+		String RemoveEndSpaces(const String &s)
+		{
+			String res{ s };
+			Index npos{ 0 };
+
+			npos = 0;
+			for (auto i = 0; i < res.size(); ++i)
+			{
+				if (std::isspace(res[i]))
+				{
+					++npos;
+				}
+				else
+				{
+					res.erase(0, npos);
+					break;
+				}
+			}
+
+			npos = 0;
+			for (auto i = res.size(); i > 0; --i)
+			{
+				if (std::isspace(res[i - 1]))
+				{
+					++npos;
+				}
+				else
+				{
+					res.erase(i, npos);
+					break;
+				}
+			}
+
+			return res;
+		}
+		String GetKey(const String &s, const char &separator)
+		{
+			std::size_t pos = s.find(separator);
+			return RemoveEndSpaces(s.substr(0, pos - 1));
+		}
+		String GetValue(const String &s, const char &separator)
+		{
+			std::size_t pos = s.find(separator);
+
+			return RemoveEndSpaces(s.substr(pos + 1));
+		}
+		String ToUpper(const String& s)
+		{
+			String res{ s };
+			
+			std::transform(res.begin(), res.end(), res.begin(), std::toupper);
+
+			return res;
+		}
+		String ToLower(const String& s)
+		{
+			String res{ s };
+
+			std::transform(res.begin(), res.end(), res.begin(), std::tolower);
+
+			return res;
+		}
+
+		bool IsEmpty(const String& s)
+		{
+			bool res{ true };
+
+			for (auto i = 0; i < s.size(); ++i)
+			{
+				if (std::isgraph(s[i]))
+				{
+					res = false;
+					break;
+				}
+			}
+
+			return res;
+		}
+
 		Strings Split(const String &s)
 		{
 			String item;
@@ -104,68 +184,6 @@ namespace utils
 
 			return elems;
 		}
-		String RemoveEndSpaces(const String &s)
-		{
-			String res{ s };
-			Index npos{ 0 };
-
-			npos = 0;
-			for (auto i = 0; i < res.size(); ++i)
-			{
-				if (std::isspace(res[i]))
-				{
-					++npos;
-				}
-				else
-				{
-					res.erase(0, npos);
-					break;
-				}
-			}
-
-			npos = 0;
-			for (auto i = res.size(); i > 0; --i)
-			{
-				if (std::isspace(res[i - 1]))
-				{
-					++npos;
-				}
-				else
-				{
-					res.erase(i, npos);
-					break;
-				}
-			}
-
-			return res;
-		}
-		bool IsEmpty(const String& s)
-		{
-			bool res{ true };
-
-			for (auto i = 0; i < s.size(); ++i)
-			{
-				if (std::isgraph(s[i]))
-				{
-					res = false;
-					break;
-				}
-			}
-
-			return res;
-		}
-
-		String GetKey(const String &s, const char &separator)
-		{
-			std::size_t pos = s.find(separator);
-			return RemoveEndSpaces(s.substr(0, pos - 1));
-		}
-		String GetValue(const String &s, const char &separator)
-		{
-			std::size_t pos = s.find(separator);
-
-			return RemoveEndSpaces(s.substr(pos + 1));
-		}
 
 		NumberWords GetNumberWords(const String& s)
 		{
@@ -193,53 +211,3 @@ namespace utils
 	} // namespace string
 
 } // namespace utils
-
-/*
-String RemoveComments(const String& s, const char& c)
-{
-	String res;
-	std::istringstream input(s);
-
-	std::getline(input, res, c);
-
-	return res;
-}
-
-		String GetWord(const String &s, const unsigned int &arg2)
-		{
-			String res;
-			bool entry(false);
-			unsigned int aux = 0;
-
-			for (auto i = 0; i < s.size(); ++i)
-			{
-				switch (s[i])
-				{
-				case 0x09: //Tab
-				case 0x20: //Space
-				case 0x3B: //;
-				case 0x3D: //=
-					if (entry && (aux == arg2))
-					{
-						return res;
-					}
-					entry = false;
-					break;
-				default:
-					if (!entry)
-					{
-						entry = true;
-						++aux;
-					}
-
-					if (aux == arg2)
-					{
-						res.push_back(s[i]);
-					}
-				}
-			}
-
-			return res;
-		}
-
-*/

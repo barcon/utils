@@ -45,14 +45,16 @@ namespace utils {
 		}	
 		String FormatPadding(const String& str, const Padding& padding, std::size_t s);
 
+		String RemoveEndSpaces(const String& s);
+		String GetKey(const String& s, const char& separator);
+		String GetValue(const String& s, const char& separator);
+		String ToUpper(const String& s);
+		String ToLower(const String& s);
+
 		Strings Split(const String& s);
 		Strings Split(const String& s, std::initializer_list<char> separator);
-		String RemoveEndSpaces(const String &s);
-		
+			
 		bool IsEmpty(const String& s);
-		
-		String GetKey(const String &s, const char &separator);
-		String GetValue(const String &s, const char &separator);
 
 		NumberWords GetNumberWords(const String &s);
 	} // namespace string
@@ -60,6 +62,3 @@ namespace utils {
 } // namespace utils
 
 #endif /*UTILS_STRING_HPP_*/
-
-//String RemoveComments(const String &s, const char &c);
-//String GetWord(const String &arg1, const unsigned int &arg2);
