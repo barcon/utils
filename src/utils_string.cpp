@@ -61,155 +61,185 @@ namespace utils
 
 			return elems;
 		}
-		String RemoveEndSpaces(const String &arg1)
+		Strings Split(const String& s, std::initializer_list<char> separator)
 		{
-			String res = arg1;
-			std::size_t length = res.length();
-			std::size_t npos;
+			String item;
+			Strings elems;
+			bool flag{ false };
 
-			if (res.size() != 0)
-			{
-
-				npos = 0;
-				for (unsigned int i = 0; i < length; ++i)
+			auto IsSeparator = [&separator](char c) 
 				{
-					if ((res[i] == 0x09) || (res[i] == 0x20))
+					return std::find(separator.begin(), separator.end(), c) != separator.end();
+				};
+
+			for (auto i = 0; i < s.size(); ++i)
+			{
+				if (!IsSeparator(s[i]))
+				{
+					if (!flag)
 					{
-						++npos;
+						flag = true;
+						item.clear();
 					}
-					else
+
+					item.push_back(s[i]);
+				}
+				else
+				{
+					if (flag)
 					{
-						res.erase(0, npos);
-						break;
+						elems.push_back(item);
+						item.clear();
+						flag = false;
 					}
 				}
+			}
 
-				npos = 0;
-				for (std::size_t i = res.length(); i > 0; --i)
+			if (flag)
+			{
+				elems.push_back(item);
+				item.clear();
+				flag = false;
+			}
+
+			return elems;
+		}
+		String RemoveEndSpaces(const String &s)
+		{
+			String res{ s };
+			Index npos{ 0 };
+
+			npos = 0;
+			for (auto i = 0; i < res.size(); ++i)
+			{
+				if (std::isspace(res[i]))
 				{
-					if ((res[i - 1] == 0x09) || (res[i - 1] == 0x20))
-					{
-						++npos;
-					}
-					else
-					{
-						res.erase(i, npos);
-						break;
-					}
+					++npos;
+				}
+				else
+				{
+					res.erase(0, npos);
+					break;
+				}
+			}
+
+			npos = 0;
+			for (auto i = res.size(); i > 0; --i)
+			{
+				if (std::isspace(res[i - 1]))
+				{
+					++npos;
+				}
+				else
+				{
+					res.erase(i, npos);
+					break;
 				}
 			}
 
 			return res;
 		}
-		String RemoveComments(const String &arg1, const char &arg2)
+		bool IsEmpty(const String& s)
 		{
-			String res;
-			std::istringstream input(arg1);
-
-			std::getline(input, res, arg2);
-
-			return res;
-		}
-		bool IsEmpty(const String& arg1)
-		{
-			auto size{ arg1.size() };
 			bool res{ true };
 
-			if (size != 0)
+			for (auto i = 0; i < s.size(); ++i)
 			{
-				for (auto i = 0; i < size; ++i)
+				if (std::isgraph(s[i]))
 				{
-					if (std::isgraph(arg1[i]))
-					{
-						res = false;
-						break;
-					}
+					res = false;
+					break;
 				}
 			}
 
 			return res;
 		}
-		unsigned int GetWords(const String &arg1)
-		{
-			String::size_type length = arg1.length();
-			bool entry(false);
-			unsigned int res = 0;
 
-			if (length != 0)
+		String GetKey(const String &s, const char &separator)
+		{
+			std::size_t pos = s.find(separator);
+			return RemoveEndSpaces(s.substr(0, pos - 1));
+		}
+		String GetValue(const String &s, const char &separator)
+		{
+			std::size_t pos = s.find(separator);
+
+			return RemoveEndSpaces(s.substr(pos + 1));
+		}
+
+		NumberWords GetNumberWords(const String& s)
+		{
+			NumberWords res{ 0 };
+			bool entry{ false };
+
+			for (auto i = 0; i < s.length(); ++i)
 			{
-				for (unsigned int i = 0; i < length; ++i)
+				if (std::isgraph(s[i]))
 				{
-					switch (arg1[i])
+					if (!entry)
 					{
-					case 0x09: //Tab
-					case 0x20: //Space
-					case 0x3B: //;
-					case 0x3D: //=
-						entry = false;
-						break;
-					default:
-						if (!entry)
-						{
-							entry = true;
-							++res;
-						}
+						entry = true;
+						++res;
 					}
+				}
+				else
+				{
+					entry = false;
 				}
 			}
 
 			return res;
-		}
-		String GetWord(const String &arg1, const unsigned int &arg2)
-		{
-			String res;
-			String::size_type length = arg1.length();
-			bool entry(false);
-			unsigned int aux = 0;
-
-			if (length != 0)
-			{
-				for (unsigned int i = 0; i < length; ++i)
-				{
-					switch (arg1[i])
-					{
-					case 0x09: //Tab
-					case 0x20: //Space
-					case 0x3B: //;
-					case 0x3D: //=
-						if (entry && (aux == arg2))
-						{
-							return res;
-						}
-						entry = false;
-						break;
-					default:
-						if (!entry)
-						{
-							entry = true;
-							++aux;
-						}
-
-						if (aux == arg2)
-						{
-							res.push_back(arg1[i]);
-						}
-					}
-				}
-			}
-
-			return res;
-		}
-		String GetKey(const String &arg1, const char &arg2)
-		{
-			std::size_t pos = arg1.find(arg2);
-			return RemoveEndSpaces(arg1.substr(0, pos - 1));
-		}
-		String GetValue(const String &arg1, const char &arg2)
-		{
-			std::size_t pos = arg1.find(arg2);
-
-			return RemoveEndSpaces(arg1.substr(pos + 1));
 		}
 	} // namespace string
 
 } // namespace utils
+
+/*
+String RemoveComments(const String& s, const char& c)
+{
+	String res;
+	std::istringstream input(s);
+
+	std::getline(input, res, c);
+
+	return res;
+}
+
+		String GetWord(const String &s, const unsigned int &arg2)
+		{
+			String res;
+			bool entry(false);
+			unsigned int aux = 0;
+
+			for (auto i = 0; i < s.size(); ++i)
+			{
+				switch (s[i])
+				{
+				case 0x09: //Tab
+				case 0x20: //Space
+				case 0x3B: //;
+				case 0x3D: //=
+					if (entry && (aux == arg2))
+					{
+						return res;
+					}
+					entry = false;
+					break;
+				default:
+					if (!entry)
+					{
+						entry = true;
+						++aux;
+					}
+
+					if (aux == arg2)
+					{
+						res.push_back(s[i]);
+					}
+				}
+			}
+
+			return res;
+		}
+
+*/

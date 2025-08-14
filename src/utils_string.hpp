@@ -8,11 +8,14 @@
 #include <string>
 #include <iterator>
 #include <memory>
+#include <initializer_list>
 
 namespace utils {
 
 	using String = std::string;
 	using Strings = std::vector<String>;
+	using NumberWords = std::size_t;
+	using Index = std::size_t;
 
 	namespace string {
 		
@@ -43,17 +46,20 @@ namespace utils {
 		String FormatPadding(const String& str, const Padding& padding, std::size_t s);
 
 		Strings Split(const String& s);
-		String RemoveEndSpaces(const String &arg1);
-		String RemoveComments(const String &arg1, const char &arg2);
+		Strings Split(const String& s, std::initializer_list<char> separator);
+		String RemoveEndSpaces(const String &s);
 		
-		bool IsEmpty(const String& arg1);
-		unsigned int GetWords(const String &arg1);
+		bool IsEmpty(const String& s);
 		
-		String GetWord(const String &arg1, const unsigned int &arg2);
-		String GetKey(const String &arg1, const char &arg2);
-		String GetValue(const String &arg1, const char &arg2);
+		String GetKey(const String &s, const char &separator);
+		String GetValue(const String &s, const char &separator);
+
+		NumberWords GetNumberWords(const String &s);
 	} // namespace string
 
 } // namespace utils
 
 #endif /*UTILS_STRING_HPP_*/
+
+//String RemoveComments(const String &s, const char &c);
+//String GetWord(const String &arg1, const unsigned int &arg2);
