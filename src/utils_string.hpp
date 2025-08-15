@@ -50,6 +50,7 @@ namespace utils {
 		String GetValue(const String& s, const char& separator);
 		String ToUpper(const String& s);
 		String ToLower(const String& s);
+		String Join(const Strings& s);
 
 		Strings Split(const String& s);
 		Strings Split(const String& s, std::initializer_list<char> separator);

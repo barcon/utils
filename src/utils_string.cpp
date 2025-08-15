@@ -86,6 +86,17 @@ namespace utils
 
 			return res;
 		}
+		String Join(const Strings& s)
+		{
+			String res;
+
+			for (const auto& it : s)
+			{
+				res += it;
+			}
+
+			return res;
+		}
 
 		bool IsEmpty(const String& s)
 		{
